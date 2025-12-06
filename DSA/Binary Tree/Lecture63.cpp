@@ -80,14 +80,15 @@ pair<bool, int> sumSolve(Node* root) {
 
     if (root->left == NULL && root->right == NULL) return make_pair(true, root->data);
 
-    pair<bool, int> l = sumSolve(root->left);
-    pair<bool, int> r = sumSolve(root->right);
+    pair<bool, int> leftSumTree = sumSolve(root->left);
+    pair<bool, int> rightSumTree = sumSolve(root->right);
 
     pair<bool, int> ans;
-    ans.second = root->data + l.second + r.second;
+    ans.second = root->data + leftSumTree.second + rightSumTree.second;
     ans.first = false;
 
-    if (root->data == l.second + r.second && l.first && r.first) {
+    if (root->data == leftSumTree.second + rightSumTree.second && leftSumTree.first &&
+        rightSumTree.first) {
         ans.first = true;
     }
 
