@@ -75,6 +75,29 @@ bool isIdentical(Node* r1, Node* r2) {
     return false;
 }
 
+pair<bool, int> sumSolve(Node* root) {
+    if (root == NULL) return make_pair(true, 0);
+
+    if (root->left == NULL && root->right == NULL) return make_pair(true, root->data);
+
+    pair<bool, int> l = sumSolve(root->left);
+    pair<bool, int> r = sumSolve(root->right);
+
+    pair<bool, int> ans;
+    ans.second = root->data + l.second + r.second;
+    ans.first = false;
+
+    if (root->data == l.second + r.second && l.first && r.first) {
+        ans.first = true;
+    }
+
+    return ans;
+}
+
+bool isSumTree(Node* root) {
+    return sumSolve(root).first;
+}
+
 int main() {
     // 1. Height of binary tree
     // https://www.geeksforgeeks.org/problems/height-of-binary-tree/1
@@ -87,4 +110,7 @@ int main() {
 
     // 4. Identical Trees
     // https://www.geeksforgeeks.org/problems/determine-if-two-trees-are-identical/1
+
+    // 5. Sum Tree
+    // https://www.geeksforgeeks.org/problems/sum-tree/1
 }
