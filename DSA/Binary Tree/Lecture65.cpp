@@ -59,6 +59,74 @@ Node* lca(Node* root, int n1, int n2) {
         return NULL;
 }
 
+int solve(Node* root, int k, int currSum, unordered_map<int, int>& prefix) {
+    if (root == NULL) return 0;
+
+    int paths = 0;
+    currSum += root->data;
+
+    if (currSum == k) paths++;
+
+    paths += prefix[currSum - k];
+    prefix[currSum]++;
+
+    paths += solve(root->left, k, currSum, prefix);
+    paths += solve(root->right, k, currSum, prefix);
+
+    prefix[currSum]--;
+
+    return paths;
+}
+
+int countAllPaths(Node* root, int k) {
+    unordered_map<int, int> prefix;
+    int res = solve(root, k, 0, prefix);
+
+    return res;
+}
+
+Node* solve(Node* root, int& count, int node) {
+    if (root == NULL) return NULL;
+    if (root->data == node) return root;
+
+    Node* left = solve(root->left, count, node);
+    Node* right = solve(root->right, count, node);
+
+    if (left || right) {
+        count--;
+        if (count == 0) return root;
+    }
+
+    return left ? left : right;
+}
+
+int kthAncestor(Node* root, int k, int node) {
+    int count = k;
+    Node* ptr = solve(root, count, node);
+
+    if (count > 0) return -1;
+    return ptr->data;
+}
+
+pair<int, int> solve(Node* root) {
+    if (root == NULL) return {0, 0};
+
+    pair<int, int> left = solve(root->left);
+    pair<int, int> right = solve(root->right);
+
+    pair<int, int> res;
+
+    res.first = root->data + left.second + right.second;
+    res.second = max(left.first, left.second) + max(right.first, right.second);
+
+    return res;
+}
+int getMaxSum(Node* root) {
+    auto [a, b] = solve(root);
+
+    return max(a, b);
+}
+
 int main() {
     // 1. Sum of nodes on longest path
     // https://www.geeksforgeeks.org/problems/sum-of-the-longest-bloodline-of-a-tree/1
