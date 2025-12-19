@@ -82,7 +82,7 @@ void flattenMorrisTraversal(Node* root) {
     Node* curr = root;
 
     while (curr != NULL) {
-        if (curr->left != NULL) {
+        if (curr->left) {
             Node* node = curr->left;
 
             while (node->right)
